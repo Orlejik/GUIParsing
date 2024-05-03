@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="289.0" prefWidth="514.0" spacing="20.0" styleClass="rootClass" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo1.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <Pane prefHeight="222.0" prefWidth="474.0">
+            <children>
+                <Pane prefHeight="90.0" prefWidth="200.0">
+                    <children>
+                        <Label alignment="CENTER" layoutY="6.0" prefHeight="17.0" prefWidth="200.0" text="Starts From..." />
+                        <TextField fx:id="startInput" alignment="CENTER" layoutX="25.0" layoutY="30.0" onKeyTyped="#validateStart" />
+                        <Label fx:id="startErrorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="-5.0" layoutY="61.0" prefHeight="17.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
+                    </children>
+                </Pane>
+                <Pane layoutX="272.0" prefHeight="90.0" prefWidth="200.0">
+                    <children>
+                        <Label alignment="CENTER" layoutX="3.0" layoutY="6.0" prefHeight="17.0" prefWidth="200.0" text="Ends from ..." />
+                        <TextField fx:id="endInput" alignment="CENTER" layoutX="17.0" layoutY="28.0" onKeyTyped="#validateEnd" />
+                        <Label fx:id="endErrorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="-4.0" layoutY="61.0" prefHeight="17.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
+                    </children>
+                </Pane>
+                <Button fx:id="proceedBtn" disable="true" layoutX="211.0" layoutY="191.0" mnemonicParsing="false" onAction="#proceedBtnAction" prefHeight="25.0" prefWidth="52.0" style="-fx-border-radius: 0; -fx-border-width: 0;" text="Button" />
+
+                <!--            PROGRESS INDICATOR-->
+                <ProgressIndicator fx:id="progressIndicatorObject" layoutX="224.0" layoutY="22.0" progress="0.0" />
+
+                <Pane layoutX="-4.0" layoutY="77.0" prefHeight="110.0" prefWidth="468.0" />
+            </children>
+        </Pane>
+
+            <!--            PROGRESS BAR-->
+            <ProgressBar fx:id="progressBarObject" prefHeight="9.0" prefWidth="474.0" progress="0.0" />
+    </children>
+</VBox>
