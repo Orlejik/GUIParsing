@@ -1,5 +1,6 @@
 package org.example.demo1;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
@@ -44,36 +45,63 @@ public class HelloController {
     @FXML
     private Label links_amount;
 
-    private double progress;
-    private List<TextField> inputs = new ArrayList<>();
 
+    private List<TextField> inputs = new ArrayList<>();
+    double progress = 0.0;
 
     @FXML
     protected void proceedBtnAction() throws InterruptedException, IOException {
 
         int diff = Math.abs(Integer.parseInt(startInput.getText()) - Integer.parseInt(endInput.getText()));
         double progress_value = (double) 1 / diff;
-        String goodLinksPath = good_links_file_path.getText();
-        String allLinksPath = all_links_file_path.getText();
-        String badLinksPath = bad_links_file_path.getText();
-        String parsedDataPath = bad_links_file_path.getText();
+//        String goodLinksPath = good_links_file_path.getText();
+//        String allLinksPath = all_links_file_path.getText();
+//        String badLinksPath = bad_links_file_path.getText();
+//        String parsedDataPath = bad_links_file_path.getText();
+        String goodLinksPath = "C:\\Users\\artiom.oriol\\Documents\\test\\GoodLinks.txt";
+        String allLinksPath = "C:\\Users\\artiom.oriol\\Documents\\test\\AllLinks.txt";
+        String badLinksPath = "C:\\Users\\artiom.oriol\\Documents\\test\\BadLinks.txt";
+        String parsedDataPath = "C:\\Users\\artiom.oriol\\Documents\\test\\ParsedData.json";
 
         if (Integer.parseInt(startInput.getText()) > Integer.parseInt(endInput.getText())) {
+            Task task = new Task() {
+                @Override
+                protected Void call() throws Exception {
+                    for (int i = Integer.parseInt(endInput.getText()); i <= Integer.parseInt(startInput.getText()); i++) {
+                        parseWebPage("https://999.md/ro/" + i + "\n", allLinksPath, goodLinksPath, badLinksPath, parsedDataPath);
+                        progress += progress_value;
+                        Thread.sleep(1000);
 
-            for (int i = Integer.parseInt(endInput.getText()); i <= Integer.parseInt(startInput.getText()); i++) {
-                Thread thread = new Thread();
-                parseWebPage("https://999.md/ro/" + i, allLinksPath, goodLinksPath, badLinksPath, parsedDataPath);
-                thread.join(progressSet(progress_value));
-                Thread.sleep(1000);
-            }
+                        if (isCancelled()) {
+                            break;
+                        }
+                        progressBarObject.setProgress(progress);
+                    }
+                    return null;
+                }
+            };
+            new Thread(task).start();
+
         } else {
-            proceedBtn.setDisable(false);
-            for (int i = Integer.parseInt(startInput.getText()); i <= Integer.parseInt(endInput.getText()); i++) {
-                Thread thread = new Thread();
-                parseWebPage("https://999.md/ro/" + i, allLinksPath, goodLinksPath, badLinksPath, parsedDataPath);
-                thread.join(progressSet(progress_value));
-                Thread.sleep(1000);
-            }
+            Task task = new Task() {
+                @Override
+                protected Void call() throws Exception {
+                    for (int i = Integer.parseInt(startInput.getText()); i <= Integer.parseInt(endInput.getText()); i++) {
+                        parseWebPage("https://999.md/ro/" + i + "\n", allLinksPath, goodLinksPath, badLinksPath, parsedDataPath);
+                        progress += progress_value;
+                        Thread.sleep(1000);
+
+                        if (isCancelled()) {
+                            break;
+                        }
+                        progressBarObject.setProgress(progress);
+                    }
+                    return null;
+                }
+            };
+
+            new Thread(task).start();
+
         }
     }
 
@@ -132,6 +160,10 @@ public class HelloController {
     @FXML
     protected void validateEnd() {
         validateInput(endInput, endErrorLabel, proceedBtn, inputs);
+    }
+
+    @FXML
+    protected void showDifference() {
         links_amount.setText(String.valueOf(returnDiff()));
     }
 

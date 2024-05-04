@@ -11,17 +11,17 @@ import java.util.Map;
 import static org.example.demo1.JsonProceeder.JsonReader.readJsonFile;
 
 public class JsonWriter {
-    public static void writeMapToJSON(Map<String, Map<String, String>> hasmap, String fileToWrite){
+    public static void writeMapToJSON(Map<String, Map<String, String>> hasmap, String fileToWriteJSON){
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(Feature.AUTO_CLOSE_SOURCE, true);
         ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-        File file = new File(fileToWrite);
+        File file = new File(fileToWriteJSON);
         try {
 
             if(!file.exists()){
                 file.createNewFile();
             }else{
-                Map<String, Map<String, String>> existingJSONContent = readJsonFile(fileToWrite);
+                Map<String, Map<String, String>> existingJSONContent = readJsonFile(fileToWriteJSON);
                 if(!isConflictPersists(existingJSONContent, hasmap)){
                     existingJSONContent.putAll(hasmap);
                     writer.writeValue(file, existingJSONContent);
