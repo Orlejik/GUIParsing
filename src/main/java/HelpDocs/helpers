@@ -1,0 +1,16 @@
+================================================== PostGRESQL ==================================================
+PostGRESQL connection :
+
+https://jdbc.postgresql.org/documentation/use/
+
+
+================================================== MySQL =======================================================
+MySQL connection :
+
+https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-connect-drivermanager.html
+
+
+================================================== MSSQL =======================================================
+MSSQL connection :
+
+https://blog.devart.com/connect-to-sql-server-in-java.html

@@ -12,6 +12,7 @@ module org.example.demo_one {
     requires com.almasb.fxgl.all;
     requires org.jsoup;
     requires com.fasterxml.jackson.databind;
+    requires java.sql;
 
     opens org.example.demo1 to javafx.fxml;
     exports org.example.demo1;

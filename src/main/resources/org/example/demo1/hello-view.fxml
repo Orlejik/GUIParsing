@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<VBox alignment="CENTER" prefHeight="389.0" prefWidth="514.0" spacing="20.0" styleClass="rootClass" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo1.HelloController">
+<VBox alignment="CENTER" prefHeight="419.0" prefWidth="514.0" spacing="20.0" styleClass="rootClass" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.demo1.HelloController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
-        <Pane prefHeight="322.0" prefWidth="474.0">
+        <Pane prefHeight="357.0" prefWidth="474.0">
             <children>
                 <Pane prefHeight="90.0" prefWidth="200.0">
                     <children>
@@ -22,14 +22,14 @@
                 <Pane layoutX="272.0" prefHeight="90.0" prefWidth="200.0">
                     <children>
                         <Label alignment="CENTER" layoutX="3.0" layoutY="6.0" prefHeight="17.0" prefWidth="200.0" text="Ends with ..." />
-                        <TextField fx:id="endInput" alignment="CENTER" layoutX="17.0" layoutY="28.0"  onKeyTyped="#validateEnd" onInputMethodTextChanged="#showDifference" promptText="00000000" />
+                        <TextField fx:id="endInput" alignment="CENTER" layoutX="17.0" layoutY="28.0" onInputMethodTextChanged="#showDifference" onKeyTyped="#validateEnd" promptText="00000000" />
                         <Label fx:id="endErrorLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="-4.0" layoutY="61.0" prefHeight="17.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
                     </children>
                 </Pane>
-                <Button fx:id="proceedBtn" disable="true" layoutX="137.0" layoutY="279.0" mnemonicParsing="false" onAction="#proceedBtnAction" prefHeight="37.0" prefWidth="200.0" style="-fx-border-radius: 0px; -fx-border-width: 2px; -fx-border-color: gray; -fx-border-style: solid;" text="Button" />
+                <Button fx:id="proceedBtn" disable="true" layoutX="132.0" layoutY="301.0" mnemonicParsing="false" onAction="#proceedLocalFilesBtnAction" prefHeight="37.0" prefWidth="200.0" style="-fx-border-radius: 0px; -fx-border-width: 2px; -fx-border-color: gray; -fx-border-style: solid;" text="Proceed Files" />
 
-
-                <Pane layoutX="3.0" layoutY="90.0" prefHeight="163.0" prefWidth="468.0">
+                <!--        =================================  LOCAL STORE =======================================================-->
+                <Pane fx:id="localStore" layoutX="3.0" layoutY="120.0" prefHeight="163.0" prefWidth="468.0">
                     <children>
                         <TextField fx:id="all_links_file_path" layoutX="15.0" layoutY="10.0" onMouseClicked="#getPathForAllLinks" prefHeight="25.0" prefWidth="410.0" promptText="File with all links...." />
                         <TextField fx:id="good_links_file_path" layoutX="15.0" layoutY="45.0" onMouseClicked="#getPathForGoodLinks" prefHeight="25.0" prefWidth="410.0" promptText="File with good Links" />
@@ -37,16 +37,54 @@
                         <TextField fx:id="parsed_data_file_path" layoutX="15.0" layoutY="115.0" onMouseClicked="#getPathForParsedData" prefHeight="25.0" prefWidth="410.0" promptText="File for parsed data" />
                         <Circle fx:id="linksall_file_isfilled" fill="#ebebeb00" layoutX="446.0" layoutY="23.0" radius="8.0" stroke="#fafafa00" strokeType="INSIDE" />
                         <Circle fx:id="linksbad_file_isfilled" fill="#ebebeb00" layoutX="446.0" layoutY="93.0" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-                        <Circle fx:id="parseddata_file_isfilled" fill="#ebebeb00" layoutX="446.0" layoutY="128.0" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                         <Circle fx:id="linksgood_file_isfilled" fill="#ebebeb00" layoutX="446.0" layoutY="58.0" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                        <Circle fx:id="parseddata_file_isfilled" fill="#ebebeb00" layoutX="446.0" layoutY="128.0" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                     </children>
                 </Pane>
+                <!--                =================================  LOCAL STORE =======================================================-->
+
                 <Label fx:id="links_amount" alignment="CENTER" contentDisplay="CENTER" layoutX="181.0" layoutY="20.0" prefHeight="25.0" prefWidth="101.0" style="-fx-font-size: 15px; -fx-font-weight: bold;" textAlignment="CENTER" />
                 <Label alignment="CENTER" contentDisplay="CENTER" layoutX="173.0" layoutY="45.0" prefHeight="25.0" prefWidth="118.0" text="links to parse" textAlignment="CENTER" />
+                <Pane layoutX="132.0" layoutY="90.0" prefHeight="25.0" prefWidth="200.0">
+                    <children>
+                        <RadioButton fx:id="localPane" layoutY="4.0" mnemonicParsing="false" onAction="#showSelected" selected="true" text="Store Localy">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="StoreIn" />
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="dbPane" layoutX="101.0" layoutY="4.0" mnemonicParsing="false" onAction="#showSelected" text="Store in DB" toggleGroup="$StoreIn" />
+                    </children>
+                </Pane>
+
+                <!--                =================================  DATABASE STORE =======================================================-->
+
+                <Pane fx:id="dbStore" layoutX="3.0" layoutY="120.0" prefHeight="173.0" prefWidth="468.0" visible="false">
+                    <children>
+                        <RadioButton fx:id="mysqlBD" layoutX="31.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectDBDriver" selected="true" text="MySQL">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="DBName" />
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="postgresqlDB" layoutX="191.0" layoutY="16.0" mnemonicParsing="false" onAction="#selectDBDriver" prefHeight="17.0" prefWidth="94.0" text="PostGreSQL" toggleGroup="$DBName" />
+                        <RadioButton fx:id="msslqBD" layoutX="331.0" layoutY="16.0" mnemonicParsing="false" onAction="#selectDBDriver" text="MSSQL" toggleGroup="$DBName" />
+                        <TextField fx:id="dbAddress" layoutY="53.0" promptText="db address" />
+                        <TextField fx:id="dbPort" layoutX="182.0" layoutY="53.0" prefHeight="25.0" prefWidth="80.0" promptText="port" />
+                        <TextField fx:id="dbName" layoutY="87.0" prefHeight="25.0" prefWidth="262.0" promptText="DB name..." />
+                        <TextField fx:id="usernameTF" layoutY="122.0" promptText="username..." />
+                        <PasswordField fx:id="passwordPF" layoutX="204.0" layoutY="122.0" promptText="password..." />
+
+                        <Label layoutX="278.0" layoutY="57.0" prefHeight="17.0" prefWidth="162.0" text="port default 3306" />
+                        <Label layoutX="278.0" layoutY="91.0" prefHeight="17.0" prefWidth="162.0" text="default DB name: parsedData" />
+                        <Button fx:id="testDBBtn" layoutX="364.0" layoutY="122.0" mnemonicParsing="false" onMouseClicked="#checkConnectionToDB" text="Test" />
+                        <Circle fx:id="connectionStatus" fill="#eeeeee" layoutX="435.0" layoutY="135.0" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                    </children>
+                </Pane>
+                <Button fx:id="bd_button" disable="true" layoutX="132.0" layoutY="301.0" mnemonicParsing="false" onAction="#proceedBDBtnAction" prefHeight="37.0" prefWidth="200.0" style="-fx-border-radius: 0px; -fx-border-width: 2px; -fx-border-color: gray; -fx-border-style: solid;" text="Proceed Database" visible="false" />
             </children>
         </Pane>
+        <!--        =================================  DATABASE STORE =======================================================-->
 
         <!--            PROGRESS BAR-->
-        <ProgressBar fx:id="progressBarObject"  prefHeight="13.0" prefWidth="493.0" progress="0.0" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-background-radius: 0;" />
+        <ProgressBar fx:id="progressBarObject" prefHeight="13.0" prefWidth="493.0" progress="0.0" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-background-radius: 0;" />
     </children>
 </VBox>
