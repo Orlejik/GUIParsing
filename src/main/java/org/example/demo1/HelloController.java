@@ -52,7 +52,6 @@ public class HelloController {
     private Circle parseddata_file_isfilled;
     @FXML
     private Label links_amount;
-
     @FXML
     private ToggleGroup StoreIn;
     @FXML
@@ -63,8 +62,6 @@ public class HelloController {
     private Pane dbStore;
     @FXML
     private Button bd_button;
-
-
     @FXML
     private ToggleGroup DBName;
     @FXML
@@ -73,27 +70,14 @@ public class HelloController {
     private RadioButton postgresqlDB;
     @FXML
     private RadioButton msslqBD;
-
     private static String dbDriver;
     private static String classForName;
-
-
     @FXML
-    private TextField dbAddress;
+    private Pane mysqlPane;
     @FXML
-    private PasswordField passwordPF;
+    private Pane postgrePane;
     @FXML
-    private TextField usernameTF;
-    @FXML
-    private TextField dbPort;
-    @FXML
-    private TextField dbName;
-    @FXML
-    private Button testDBBtn;
-    @FXML
-    private Circle connectionStatus;
-
-
+    private Pane mssqlPane;
     private List<TextField> inputs = new ArrayList<>();
     double progress = 0.0;
 
@@ -155,7 +139,6 @@ public class HelloController {
 
     @FXML
     protected void proceedBDBtnAction() {
-
     }
 
     private int returnDiff() {
@@ -220,7 +203,6 @@ public class HelloController {
         links_amount.setText(String.valueOf(returnDiff()));
     }
 
-
     @FXML
     protected void showSelected() {
         RadioButton selectedRadioButton = (RadioButton) StoreIn.getSelectedToggle();
@@ -239,77 +221,151 @@ public class HelloController {
         System.out.println(selectedRadioButton.getText());
     }
 
-
     @FXML
     protected RadioButton selectDBDriver() {
-        dbAddress.setText("");
-        passwordPF.setText("");
-        usernameTF.setText("");
-        dbPort.setText("");
-        dbName.setText("");
-        return (RadioButton) DBName.getSelectedToggle();
-
+        RadioButton selectDbDriver = (RadioButton) DBName.getSelectedToggle();
+        if (selectDbDriver.equals(mysqlBD)) {
+            mysqlPane.setVisible(true);
+            postgrePane.setVisible(false);
+            mssqlPane.setVisible(false);
+        } else if (selectDbDriver.equals(postgresqlDB)) {
+            mysqlPane.setVisible(false);
+            postgrePane.setVisible(true);
+            mssqlPane.setVisible(false);
+        } else if (selectDbDriver.equals(msslqBD)) {
+            mysqlPane.setVisible(false);
+            postgrePane.setVisible(false);
+            mssqlPane.setVisible(true);
+        } else {
+            throw new RuntimeException("No such driver!");
+        }
+        return selectDbDriver;
     }
-    String address;
-    String port;
-    String dbname;
+
+    private String setDefaultValue(TextField textField, String defaultValue) {
+        if (textField.getText().isEmpty()) {
+            return defaultValue;
+        }
+        return textField.getText();
+    }
+
+    @FXML
+    private Button testMysqlBtn;
+    @FXML
+    private Circle connectionMysqlStatus;
+    @FXML
+    private Button testpostGREBtn;
+    @FXML
+    private Circle connectionpostGREStatus;
+    @FXML
+    private Button testmssqlBtn;
+    @FXML
+    private Circle connectionmssqlStatus;
+
+    private void setConnection(String classF, String dbdriver, String bdAddress, String dbPort, String dbName, String username, String Password, Button button, Circle circle) throws SQLException, InterruptedException {
+        Connector connector = new Connector(classF, dbdriver, bdAddress, dbPort, dbName, username, Password);
+        System.out.println(connector.url());
+        try (Connection connection = connector.connect(circle, button)) {
+
+            if (connection == null) {
+                System.out.println("Connection was not established");
+                System.out.printf("username : %s", connector.getUsername());
+                System.out.printf("username : %s", connector.getPassword());
+                circle.setFill(Color.RED);
+                button.setText("NO!");
+                Thread.sleep(5000);
+                button.setText("Test");
+            } else {
+                System.out.printf("Connected to DB : %s", connector.getDbName());
+                System.out.printf("username : %s", connector.getUsername());
+                System.out.printf("username : %s", connector.getPassword());
+                System.out.printf("Connected to DB : %s", connector.getDbName());
+                circle.setFill(Color.GREEN);
+                button.setText("YES");
+                Thread.sleep(5000);
+                button.setText("Test");
+            }
+        }
+    }
+
+    @FXML
+    private TextField mysqlAddress;
+    @FXML
+    private PasswordField mysqlPasswordPF;
+    @FXML
+    private TextField mysqlUsernameTF;
+    @FXML
+    private TextField mysqlPort;
+    @FXML
+    private TextField mysqlName;
+    @FXML
+    private TextField mssqlAddress;
+    @FXML
+    private TextField mssqlPort;
+    @FXML
+    private TextField mssqlName;
+    @FXML
+    private TextField mssqlusernameTF;
+    @FXML
+    private TextField mssqlpasswordPF;
+    @FXML
+    private TextField postGREAddress;
+    @FXML
+    private TextField postGREPort;
+    @FXML
+    private TextField postGREName;
+    @FXML
+    private TextField postGREusernameTF;
+    @FXML
+    private TextField postGREpasswordPF;
+
     @FXML
     protected void checkConnectionToDB() throws SQLException, InterruptedException {
         RadioButton selectDbDriverBtn = selectDBDriver();
         if (selectDbDriverBtn.equals(mysqlBD)) {
             classForName = "com.mysql.cj.jdbc.Driver";
             dbDriver = "jdbc:mysql://";
+//    private Button testMysqlBtn;
+//    private Circle connectionMysqlStatus;
+            setConnection(classForName,
+                    dbDriver,
+                    setDefaultValue(mysqlAddress, "localhost"),
+                    setDefaultValue(mysqlPort, "3306"),
+                    setDefaultValue(mysqlName, "parsedData"),
+                    mysqlUsernameTF.getText(),
+                    mysqlPasswordPF.getText(),
+                    testMysqlBtn,
+                    connectionMysqlStatus);
         } else if (selectDbDriverBtn.equals(postgresqlDB)) {
             classForName = "org.postgresql.Driver";
             dbDriver = "jdbc:postgresql://";
-        } else if(selectDbDriverBtn.equals(msslqBD)){
+//    private Button testpostGREBtn;
+//    private Circle connectionpostGREStatus;
+            setConnection(classForName,
+                    dbDriver,
+                    setDefaultValue(postGREAddress, "localhost"),
+                    setDefaultValue(postGREPort, "5432"),
+                    setDefaultValue(postGREName, "parsedData"),
+                    postGREusernameTF.getText(),
+                    postGREpasswordPF.getText(),
+                    testpostGREBtn,
+                    connectionpostGREStatus);
+        } else if (selectDbDriverBtn.equals(msslqBD)) {
             classForName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
             dbDriver = "jdbc:sqlserver://";
-        }else{
+//    private Button testmssqlBtn
+//    private Circle connectionmssqlStatus
+            setConnection(classForName,
+                    dbDriver,
+                    setDefaultValue(mssqlAddress, "localhost"),
+                    setDefaultValue(mssqlPort, "1434"),
+                    setDefaultValue(mssqlName, "parsedData"),
+                    mssqlusernameTF.getText(),
+                    mssqlpasswordPF.getText(),
+                    testmssqlBtn,
+                    connectionmssqlStatus);
+        } else {
             throw new RuntimeException("No such driver!");
         }
-        if(dbAddress.getText().isEmpty()){
-            address = "localhost";
-        }else{
-            address= dbAddress.getText();
-        }
-
-        if(dbPort.getText().isEmpty()){
-            port = "3306";
-        }else{
-            port= dbPort.getText();
-        }
-
-        if(dbName.getText().isEmpty()){
-            dbname = "localhost";
-        }else{
-            dbname= dbName.getText();
-        }
-        Connector connector = new Connector(classForName, dbDriver, address, port, dbname, usernameTF.getText(), passwordPF.getText());
-        System.out.println(connector.url());
-//        try (Connection connection = connector.connect(connectionStatus, testDBBtn)) {
-        try (Connection connection = connector.connect()) {
-
-            if (connection == null) {
-                System.out.println("Connection was not established");
-                System.out.printf("username : %s", connector.getUsername());
-                System.out.printf("username : %s", connector.getPassword());
-                connectionStatus.setFill(Color.RED);
-                testDBBtn.setText("NO!");
-                Thread.sleep(5000);
-                testDBBtn.setText("Test");
-            }else{
-                System.out.printf("Connected to DB : %s", connector.getDbName());
-                System.out.printf("username : %s", connector.getUsername());
-                System.out.printf("username : %s", connector.getPassword());
-                System.out.printf("Connected to DB : %s", connector.getDbName());
-                connectionStatus.setFill(Color.GREEN);
-                testDBBtn.setText("YES");
-                Thread.sleep(5000);
-                testDBBtn.setText("Test");
-            }
-        }
-
     }
-
 }

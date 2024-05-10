@@ -93,8 +93,8 @@ public class Connector {
     }
     private String url;
     private Connection connection;
-//    public Connection connect(Circle circle, Button btn) throws InterruptedException {
-    public Connection connect() {
+    public Connection connect(Circle circle, Button btn) throws InterruptedException {
+//    public Connection connect() {
         Properties props = new Properties();
         props.setProperty("user", getUsername());
         props.setProperty("password", getPassword());
@@ -114,11 +114,11 @@ public class Connector {
             throw new RuntimeException(e);
         } catch (SQLException e) {
             System.out.println("something wrong 2");
-//            circle.setFill(Color.RED);
-//            btn.setText("NO!");
-//            Thread.sleep(5000);
-//            circle.setFill(Paint.valueOf("#EEEEEE"));
-//            btn.setText("Test");
+            circle.setFill(Color.RED);
+            btn.setText("NO!");
+            Thread.sleep(5000);
+            circle.setFill(Paint.valueOf("#EEEEEE"));
+            btn.setText("Test");
             throw new RuntimeException(e);
         }
     }
